@@ -87,3 +87,25 @@ export const GetProductList = () => async (dispatch) => {
       })
     }
   }
+  export const DeleteProduct = (id) => async (dispatch) => {
+    try {
+      dispatch({
+        type: "PRODUCT_DELETING_LOADING",
+      });
+      const res = await axios.delete(`https://fakestoreapi.com/products/${id}`);
+      console.log(res.data)
+    //  console.log(`${id}`)
+    // console.log(`${index}`)
+      dispatch({
+        type: "PRODUCT_DELETING_SUCCESS",
+        payload: res.data,
+      // index: index,
+      });
+      console.log("delete")
+    } catch (e) {
+      console.log(e.message, "error");
+      dispatch({
+        type: "PRODUCT_DELETE_FAIL",
+      });
+    }
+  };

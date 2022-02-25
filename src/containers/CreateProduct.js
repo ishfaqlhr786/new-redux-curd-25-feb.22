@@ -1,16 +1,22 @@
-import React,{useState,useEffect} from 'react'
+import React,{useState,useEffect,useRef} from 'react'
 import {Link,useHistory}  from 'react-router-dom'
 import {useDispatch,useSelector} from 'react-redux'
-import { CreateProductNew, GetProduct } from "../actions/ProductActions";
+import { CreateProductNew, GetProduct ,DeleteProduct} from "../actions/ProductActions";
 import {GetProductList} from '../actions/ProductActions'
-import { propertyOf } from 'lodash';
+import { propertyOf, set } from 'lodash';
 import './Product.css'
+import axios from 'axios'
+import { ProductList } from './ProductList';
+import { getDefaultNormalizer } from '@testing-library/dom';
 export const CreateProduct = (props) => {
-    // const name=props.name
-    // console.log(name)
-    const history=useHistory()
-    const [title1,setTitle] = useState("")
-    const [ProductId,setPid]=useState()
+    
+   
+  
+   
+   // const history=useHistory()
+    // const [title1,setTitle] = useState("")
+   
+    // const [ProductId,setPid]=useState()
    const [postData,setPostdata]=useState({
       // id:null,
        title:"",
@@ -20,28 +26,24 @@ export const CreateProduct = (props) => {
    })
     const dispatch=useDispatch();
    const postData1=useSelector((state)=> state.CreateProduct)
+   console.log(postData1)
    const products=useSelector((state)=> state.ProductList)
-   console.log(products)
-   let data1=[...products.data]
-  // const [data1,setData1]=useState([...products.data])
-   console.log(data1)
-   data1.push(postData1.data)
-   console.log(data1)
-  // products=data1
-   console.log("products is=",data1)
-    console.log(postData1)
-  console.log(postData1.data.id)
-  console.log(postData1.data.title)
-  
+   console.log(products.data)
+
+   const [data2,setData2]= useState(
+        [...products.data]
+   )
+   console.log(data2)
  
 const handleSubmit=(e)=>{
+   
   e.preventDefault();
   
    
   //dispatch(createPosts(postData))
   dispatch(CreateProductNew(postData))
- 
-   
+  data2.push(postData1.data)
+  
     
 }
 const changeImage=(e)=>{
@@ -61,10 +63,32 @@ useEffect(()=>{
    
     dispatch(GetProductList())
 },[dispatch])
-const Delete=({id})=>{
-console.log({id})
+useEffect(()=>{
+    dispatch(GetProductList())
+},[data2])
+const getIndex=(index)=>{
+    console.log(index)
+    return index;
 }
-    return (
+const handleDelete=async(index)=>{
+ 
+ await   axios.delete(`https://fakestoreapi.com/products/${index}`)
+    .then(res => {
+        console.log(res.data)
+    
+   const rows=[...data2]
+   console.log(rows)
+   rows.splice(index,1)
+  setData2([...rows])
+ 
+  
+    })
+   
+            }
+    
+
+
+   return (
         <>
         <Link to="/ProductList">Products</Link>
         <div className="main">
@@ -134,25 +158,27 @@ console.log({id})
                    </th>
                </tr>
                {
-                   data1.map(product=>{
+            data2?.map((product,index)=>{
                        const {id,title,category,price,image}=product
                        return(<>
-                       <tr key={id}>
+                       <tr key={index} onClick={()=>getIndex(index)}>
                            <td> {id}</td>
                            <td>{title}</td>
                            <td>{category}</td>
                            <td>{price}</td>
                            <td><img src={image} alt="ll" width="200px"  height="200px"/></td>
                            <td>{<Link to={`/Product/${id}`}>Update</Link> }</td>
-                           <td>{<button onClick={()=>
-                           {
-                             
-                          console.log("delet prsessed")
-                           }
-                        }
+                           <td  >
+                               
+                               <button onClick={()=>handleDelete(index)}
+                           
+                       
                          
                         
-                        >Delete</button> }</td>
+                        >Delete</button> 
+                        
+                        
+                        </td>
 
                        </tr>
                        
