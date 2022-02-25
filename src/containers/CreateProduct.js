@@ -39,7 +39,7 @@ const handleSubmit=(e)=>{
    
   e.preventDefault();
   
-   
+  
   //dispatch(createPosts(postData))
   dispatch(CreateProductNew(postData))
   data2.push(postData1.data)
@@ -65,7 +65,7 @@ useEffect(()=>{
 },[dispatch])
 useEffect(()=>{
     dispatch(GetProductList())
-},[data2])
+},[postData1])
 const getIndex=(index)=>{
     console.log(index)
     return index;
@@ -136,7 +136,7 @@ const handleDelete=async(index)=>{
             </h2> */}
             <div className="main" style={{textAlign:'center'}}>
                 <span><h2>Latest Products</h2></span><br/>
-           <table  width="1200px" border="5" cellSpacing="2">
+           <table  width="1200px" border="5px" cellspacing="8px" cellsPadding="10" rowspacing="10px">
                <tr>
                    <th>
                        Id:
@@ -167,10 +167,10 @@ const handleDelete=async(index)=>{
                            <td>{category}</td>
                            <td>{price}</td>
                            <td><img src={image} alt="ll" width="200px"  height="200px"/></td>
-                           <td>{<Link to={`/Product/${id}`}>Update</Link> }</td>
+                           <td>{<Link className="btn btn-lg btn-success"   to={`/Product/${id}`}>Update</Link> }</td>
                            <td  >
                                
-                               <button onClick={()=>handleDelete(index)}
+                               <button className="btn btn-lg btn-danger"  onClick={()=>handleDelete(index)}
                            
                        
                          
